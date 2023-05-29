@@ -27,15 +27,12 @@ const Login = () => {
       .then((res: AxiosResponse) => {
         if (res.data.token) {
           console.log(res.data.token);
-        } else if (res.data.message) {
-          setError(res.data.message);
         }
       })
       .catch((err: AxiosError) => {
         const message: any = err.response?.data;
         setError(message);
       });
-    0;
   }
 
   return (
