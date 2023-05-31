@@ -3,16 +3,26 @@
 	import { faBars } from '@fortawesome/free-solid-svg-icons';
 </script>
 
-<div class="navigation flex flex-wrap py-4 px-2 justify-between">
+<div class="navigation flex flex-wrap py-4 px-2 justify-between select-none">
 	<div class="groupOne flex items-center justify-center">
-		<div class="toggleMenu px-2 mr-4 py-2 hover:opacity-90 hover:bg-white hover:bg-opacity-5 rounded-sm cursor-pointer">
+		<div
+			on:click={() => {
+				// @ts-ignore
+				sidebar.classList.toggle('hidden');
+			}}
+			on:keypress={() => {
+				// @ts-ignore
+				sidebar.classList.toggle('hidden');
+			}}
+			class="toggleMenu px-2 mr-4 py-2 hover:opacity-90 hover:bg-white hover:bg-opacity-5 rounded-sm cursor-pointer"
+		>
 			<Fa icon={faBars} size="20" class="mx-2" />
 		</div>
 		<div class="title flex">
 			App Name — <div class="font-light">Trains</div>
 		</div>
 	</div>
-	<div class="groupTwo flex items-center justify-center">
+	<div class="groupTwo flex items-center justify-center select-text">
 		<div class="refreshTimeContainer">
 			<i class="flex">
 				Last Refreshed:

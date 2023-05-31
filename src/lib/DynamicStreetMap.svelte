@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
-	let Route = [];
+	let Route: any[] = [];
 	// Streetmap logic
 	// initialize the map on the "map" div with a given center and zoom
-
+	let Map: any;
 	async function fetchMap() {
 		const data = await d3
 			.csv(
@@ -39,7 +39,7 @@
 		// @ts-ignore
 		await fetchMap().then(() => {
 			// @ts-ignore
-			const Map = L.map('Map', {
+			Map = L.map('_Map', {
 				center: Route[Route.length - 1],
 				zoom: 12
 			}); // @ts-ignore
@@ -50,6 +50,7 @@
 				maxZoom: 14
 			}).addTo(Map);
 			// console.log(Route);
+			// @ts-ignore
 			L.polyline(Route).addTo(Map);
 			// L.Routing.control({
 			// @ts-ignore
@@ -58,9 +59,16 @@
 			// }).addTo(Map);
 		});
 	});
+
+	export function resizeMap() {
+		if (Map) {
+			Map.invalidateSize();
+		}
+	}
 </script>
 
-<main id="Map" class="h-full w-full bg-green-300">
+<svelte:window on:resize={resizeMap} />
+<main id="_Map" class="h-full w-full bg-green-300">
 	<div
 		class="loadingMessage h-full w-full flex justify-center items-center font-semibold text-4xl text-center"
 	>
