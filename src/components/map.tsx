@@ -7,8 +7,6 @@ interface DataPoint {
   longitude: number;
 }
 
-
-
 const Map: React.FC = () => {
   const [data, setData] = useState<DataPoint[]>([]);
   
