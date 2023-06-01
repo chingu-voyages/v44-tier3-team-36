@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Polyline, Marker } from "react-leaflet";
+import outputData from './output.json'
 
 interface DataPoint {
   latitude: number;
   longitude: number;
 }
 
+
+
 const Map: React.FC = () => {
   const [data, setData] = useState<DataPoint[]>([]);
+  
+  const blackOptions = {color: 'black'}
+  
+  const multiPolyline = outputData.map(item => 
+    item.coordinates.map(coord => [coord.latitude, coord.longitude]))
+    console.log(multiPolyline)
 
   useEffect(() => {
     // Fetch your JSON data here and update the state
@@ -42,6 +51,7 @@ const Map: React.FC = () => {
             // Add additional marker options or popup information if needed
           />
         ))}
+        <Polyline pathOptions={blackOptions} positions={multiPolyline}/>
       </MapContainer>
     </div>
   );
@@ -51,3 +61,5 @@ const Map: React.FC = () => {
 
 
 export default Map;
+
+
