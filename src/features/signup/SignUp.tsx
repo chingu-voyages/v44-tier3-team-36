@@ -1,53 +1,83 @@
-import { FormEvent, useState } from "react";
+import { useState, FormEvent } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { signupAsync } from "./signupSlice";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import axios, { AxiosError, AxiosResponse } from "axios";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const SignUp = () => {
+  const [payload, setPayload] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
+  const dispatch = useAppDispatch();
   const [visible, setVisible] = useState(false);
-  const [error, setError] = useState({ message: "" });
+  // const [error, setError] = useState({ message: "" });
 
-  function handleSubmit(e: FormEvent) {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    const newForm = new FormData();
-
-    newForm.append("email", email);
-    newForm.append("password", password);
-
-    axios
-      .post(`http://localhost:8080/api/v1/auth/authenticate`, newForm, config)
-      .then((res: AxiosResponse) => {
-        if (res.data.token) {
-          console.log(res.data.token);
-        } else if (res.data.message) {
-          setError(res.data.message);
-        }
-      })
-      .catch((err: AxiosError) => {
-        const message: any = err.response?.data;
-        setError(message);
-      });
-    0;
-  }
+    dispatch(signupAsync(payload));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Login to your account
+          Register New Account
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="firstname"
+                className="block text-sm font-medium text-gray-700"
+              >
+                First Name
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  name="text"
+                  autoComplete="firstname"
+                  required
+                  value={payload.firstname}
+                  onChange={(e) => {
+                    setPayload({
+                      ...payload,
+                      firstname: e.target.value,
+                    });
+                  }}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="lastname"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Last Name
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  name="text"
+                  autoComplete="lastname"
+                  required
+                  value={payload.lastname}
+                  onChange={(e) => {
+                    setPayload({
+                      ...payload,
+                      lastname: e.target.value,
+                    });
+                  }}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -61,14 +91,17 @@ const Login = () => {
                   name="email"
                   autoComplete="email"
                   required
-                  value={email}
+                  value={payload.email}
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setPayload({
+                      ...payload,
+                      email: e.target.value,
+                    });
                   }}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
-              {error && <div className="text-red-900">{error.message}</div>}
+              {/* {error && <div className="text-red-900">{error.message}</div>} */}
             </div>
             <div>
               <label
@@ -83,9 +116,12 @@ const Login = () => {
                   name="password"
                   autoComplete="current-password"
                   required
-                  value={password}
+                  value={payload.password}
                   onChange={(e) => {
-                    setPassword(e.target.value);
+                    setPayload({
+                      ...payload,
+                      password: e.target.value,
+                    });
                   }}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
@@ -103,32 +139,8 @@ const Login = () => {
                   />
                 )}
               </div>
-              {/* </div> */}
-              {/* <div className={`flex items-center justify-between`}>
-              <div className={`flex items-center`}>
-                <input
-                  type="checkbox"
-                  name="remember-me"
-                  id="remember-me"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href=".forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div> */}
-              {/* <div> */}
+            </div>
+            <div>
               <button
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -137,9 +149,9 @@ const Login = () => {
               </button>
             </div>
             <div className={`flex items-center w-full`}>
-              <h4>Need an account?</h4>
-              <Link to="/sign-up" className="text-blue-600 pl-2">
-                Sign Up
+              <h4>Already have an account?</h4>
+              <Link to="/login" className="text-blue-600 pl-2">
+                Sign In
               </Link>
             </div>
           </form>
@@ -149,4 +161,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
