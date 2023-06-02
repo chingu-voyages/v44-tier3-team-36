@@ -12,3 +12,12 @@ And before we go there's "one more thing"! Once you decide what to include
 in your `readme` feel free to replace the text we've provided here.
 
 > Own it & Make it your Own!
+
+
+### Contributors
+
+<br/>
+
+<a href="https://github.com/chingu-voyages/v44-tier3-team-36/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=chingu-voyages/v44-tier3-team-36" />
+</a>
