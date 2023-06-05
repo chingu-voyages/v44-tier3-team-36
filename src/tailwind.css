@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Inter", sans-serif;
+  outline: 1px solid red;
+}
+
+:root {
+  --border-card: 221 229 235;
+  --track-bgcolor: 97 120 137;
+}
+
+.track-bg {
+  background: rgb(var(--track-bgcolor));
+}
