@@ -1,13 +1,12 @@
-import Map from './components/map'
-import './App.css'
+import "./App.css";
+import Map from "./components/map.tsx";
 
 function App() {
-
   return (
-    <>
-    <Map />
-    </>
-  )
+    <div className="relative">
+      <Map />
+    </div>
+  );
 }
 
-export default App
+export default App;
