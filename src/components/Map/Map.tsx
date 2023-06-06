@@ -1,53 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Polyline, Marker } from "react-leaflet";
-import stationsData from "@assets/data/stops.json";
-import outputData from "@assets/data/shapes.json";
+import stopsData from "@assets/data/stops.json";
+import shapeData from "@assets/data/shapes.json";
 import SideBar from "$lib/SideBar/SideBar.tsx";
-import * as d3 from "d3";
-// let Route: any[] = [];
-// // Streetmap logic
-// // initialize the map on the "map" div with a given center and zoom
-// async function fetchMap() {
-//   const data = await d3
-//     .csv(
-//       'https://gist.githubusercontent.com/AlexDev404/716394419cee4119f710bbd1c19a7158/raw/shapes.csv'
-//     )
-//     .then((data) => {
-//       const grouped_data = d3.group(data, (d) => d.shape_id);
-
-//       let longestArray = null;
-//       let maxLength = 0;
-
-//       for (const [key, value] of grouped_data) {
-//         if (value.length > maxLength) {
-//           longestArray = value;
-//           maxLength = value.length;
-//         }
-//       }
-
-//       // console.log('Longest Array:', longestArray);
-//       longestArray?.forEach((row) => {
-//         const Lat = row.shape_pt_lat;
-//         const Lon = row.shape_pt_lon;
-//         // console.log('shape_pt_lat:', Lat);
-//         // console.log('shape_pt_lon:', Lon);
-//         Route.push([Lat, Lon]);
-//       });
-//     });
-// }
 interface DataPoint {
+  stopId: string;
   stopName: string;
-  lines: string[];
   latitude: number;
   longitude: number;
 }
 
 interface Shape {
-  shape_id: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  }[];
+  lon: number;
+  lat: number;
 }
 
 const Map: React.FC = () => {
@@ -58,16 +23,7 @@ const Map: React.FC = () => {
   // const specificShapeId = "1";
 
   useEffect(() => {
-    // Fetch your JSON data here and update the state
-    fetch("../../data/stations_and_coordinates.json")
-      .then((response) => response.json())
-      .then((jsonData: DataPoint[]) => {
-        console.log(jsonData);
-        setData(jsonData);
-      })
-      .catch((error) => {
-        console.error("Error fetching JSON data:", error);
-      });
+    setData(stopsData);
   }, []);
 
   return (
@@ -79,7 +35,7 @@ const Map: React.FC = () => {
         className="sidebar inline h-full max-w-sm overflow-y-auto"
       >
         <SideBar
-          stationsData={stationsData}
+          stopsData={stopsData}
           selectedLine={selectedLine}
           setSelectedLine={setSelectedLine}
         />
@@ -99,36 +55,42 @@ const Map: React.FC = () => {
 
           {/* Plot the points on the map */}
           {/* Selected line is the line clicked on the sidebar, so if its the same as any of the points.lines it'll render */}
-          {data.map((point, index) => {
-            if (selectedLine && point.lines.includes(selectedLine)) {
-              return (
-                <Marker
-                  key={index}
-                  position={[point.latitude, point.longitude]}
-                />
-              );
+          {Object.keys(stopsData).map((point) => {
+            // console.log(stopsData[point], index);
+            if (selectedLine && point == selectedLine) {
+              return stopsData[point].map((coord, index) => {
+                // console.log(coord.latitude, coord.longitude);
+                return (
+                  <Marker
+                    key={index}
+                    position={[
+                      parseFloat(coord.latitude) || 0,
+                      parseFloat(coord.longitude) || 0,
+                    ]}
+                  />
+                );
+              });
             }
             return null;
           })}
-
           {/* Create separate polylines for each shape_id */}
           {/* Same as above it'll show the line of the selectedline if its equal to its shape_id */}
-
-          {/* {outputData.map((shape: Shape) => {
-            if (shape.shape_id === selectedLine) {
+          {Object.keys(shapeData).map((shape: Shape) => {
+            // console.log(shapeData[shape]);
+            if (shape === selectedLine) {
               return (
                 <Polyline
-                  key={shape.shape_id}
+                  key={shape}
                   pathOptions={blackOptions}
-                  positions={shape.coordinates.map((coord) => [
-                    coord.latitude,
-                    coord.longitude,
+                  positions={shapeData[shape].map((coord) => [
+                    coord.lat,
+                    coord.lon,
                   ])}
                 />
               );
             }
-             return null; // Will not render any other lines after
-          })} */}
+            return null; // Will not render any other lines after
+          })}
         </MapContainer>
       </main>
     </div>

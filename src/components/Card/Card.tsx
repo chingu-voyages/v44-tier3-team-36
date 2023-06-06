@@ -6,7 +6,7 @@ const Card: React.FC = (props) => {
       <div className="top-header-container flex flex-wrap justify-center items-center mx-4 my-4">
         <div className="block">
           <div className="rounded-lg title-element border border-card block px-4 pr-12 py-2 my-4 w-full">
-            <div className="title text-2xl font-base text-black w-full">
+            <div className="title text-2xl font-base text-black w-full hover:underline cursor-pointer">
               {props.title}
             </div>
             <div className="title uppercase text-lg font-light text-black w-full">
