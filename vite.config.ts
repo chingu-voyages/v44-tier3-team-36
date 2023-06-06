@@ -6,6 +6,15 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: [{ find: "$lib", replacement: path.resolve(__dirname, "./src/components/") }],
+    alias: [
+      {
+        find: "$lib",
+        replacement: path.resolve(__dirname, "./src/components/"),
+      },
+      {
+        find: "@assets",
+        replacement: path.resolve(__dirname, "./src/assets/"),
+      },
+    ],
   },
 });

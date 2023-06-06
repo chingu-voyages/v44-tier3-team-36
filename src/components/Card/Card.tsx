@@ -21,7 +21,7 @@ const Card: React.FC = (props) => {
         </div>
       </div>
       <div className="bottom-footer-container flex flex-wrap justify-center items-center mx-4 my-4">
-    {props.stops || "TRACK_STOP_ELEMENT"}
+        {props.stops || "TRACK_STOP_ELEMENT"}
         <div className="title-rounded uppercase flex justify-center track-bg items-center text-lg text-white font-base hover:opacity-90 cursor-pointer w-full rounded-lg title-element border border-card track-bg px-4 pr-12 py-2 my-4">
           Track This Line
         </div>

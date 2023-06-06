@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Polyline, Marker } from "react-leaflet";
-import stationsData from "$lib/stations_and_coordinates.json";
-import outputData from "$lib/output.json";
+import stationsData from "@assets/data/stops.json";
+import outputData from "@assets/data/shapes.json";
 import SideBar from "$lib/SideBar/SideBar.tsx";
 import * as d3 from "d3";
 // let Route: any[] = [];
@@ -114,7 +114,7 @@ const Map: React.FC = () => {
           {/* Create separate polylines for each shape_id */}
           {/* Same as above it'll show the line of the selectedline if its equal to its shape_id */}
 
-          {outputData.map((shape: Shape) => {
+          {/* {outputData.map((shape: Shape) => {
             if (shape.shape_id === selectedLine) {
               return (
                 <Polyline
@@ -127,8 +127,8 @@ const Map: React.FC = () => {
                 />
               );
             }
-            return null; // Will not render any other lines after
-          })}
+             return null; // Will not render any other lines after
+          })} */}
         </MapContainer>
       </main>
     </div>
