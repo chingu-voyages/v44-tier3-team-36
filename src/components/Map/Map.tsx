@@ -4,10 +4,10 @@ import stopsData from "@assets/data/stops.json";
 import shapeData from "@assets/data/shapes.json";
 import SideBar from "$lib/SideBar/SideBar.tsx";
 interface DataPoint {
-  stopId: string;
+  stopID: string;
   stopName: string;
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
 }
 
 interface Shape {
@@ -56,16 +56,16 @@ const Map: React.FC = () => {
           {/* Plot the points on the map */}
           {/* Selected line is the line clicked on the sidebar, so if its the same as any of the points.lines it'll render */}
           {Object.keys(stopsData).map((point) => {
-            // console.log(stopsData[point], index);
+            // console.log(stopsData[point]);
             if (selectedLine && point == selectedLine) {
               return stopsData[point].map((coord, index) => {
-                // console.log(coord.latitude, coord.longitude);
+                // console.log(coord.lat, coord.lon);
                 return (
                   <Marker
                     key={index}
                     position={[
-                      parseFloat(coord.latitude) || 0,
-                      parseFloat(coord.longitude) || 0,
+                      parseFloat(coord.lat) || 0,
+                      parseFloat(coord.lon) || 0,
                     ]}
                   />
                 );
