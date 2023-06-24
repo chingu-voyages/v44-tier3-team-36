@@ -1,19 +1,26 @@
 import { useState } from "react";
 import stopsData from "./stations/stations.json";
 
+interface stopsData {
+  [line: string]: {
+    stops: string[];
+  };
+}
+
 function LinesOnSidebar() {
-  const [selectedLine, setSelectedLine] = useState(null);
+  const [selectedLine, setSelectedLine] = useState<string | null>(null);
 
   const handleLineClick = (line: string) => {
     setSelectedLine(line);
   };
+
   return (
     <div>
       {selectedLine ? (
         <div className="space-y-2">
           <h2 className="text-lg font-bold">{selectedLine}</h2>
           <ul>
-            {stopsData[selectedLine].stops.map((stop, index) => (
+            {stopsData[selectedLine].stops.map((stop: string, index: number) => (
               <li key={index}>{stop}</li>
             ))}
           </ul>
