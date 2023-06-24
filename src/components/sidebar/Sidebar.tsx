@@ -1,3 +1,5 @@
+import LinesOnSidebar from "./LinesOnSidebar";
+
 function Sidebar() {
   return (
     <aside
@@ -5,9 +7,7 @@ function Sidebar() {
       style={{ zIndex: 999 }}
     >
       <nav className="space-y-8 text-sm">
-        <div className="space-y-2">
-          <div className="flex flex-col space-y-1"></div>
-        </div>
+        <LinesOnSidebar />
       </nav>
     </aside>
   );

@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer} from "react-leaflet";
 
-const position = [40.7128, -74.006];
+ 
+const position: [number, number] = [40.7128, -74.006];
 
 function Map() {
   return (
@@ -9,6 +10,7 @@ function Map() {
         center={position}
         zoom={13}
         style={{ height: "100vh" }}
+        zoomControl = {false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
