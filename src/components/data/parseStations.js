@@ -8,13 +8,15 @@ fs.createReadStream("Stations.csv")
   .on("data", (data) => {
     const daytimeRoutes = data["Daytime Routes"].split(" ");
     const stopName = data["Stop Name"];
+    const latitude = parseFloat(data["GTFS Latitude"]);
+    const longitude = parseFloat(data["GTFS Longitude"]);
 
     daytimeRoutes.forEach((line) => {
       if (!results[line]) {
-        results[line] = { stops: [] };
+        results[line] = { stops: {} };
       }
 
-      results[line].stops.push(stopName);
+      results[line].stops[stopName] = { coordinates: [latitude, longitude] };
     });
   })
   .on("end", () => {

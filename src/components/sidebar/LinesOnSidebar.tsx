@@ -1,5 +1,5 @@
 import { useState } from "react";
-import stopsData from "./stations/stations.json";
+import stopsData from "../data/stations.json"
 
 interface stopsData {
   [line: string]: {
