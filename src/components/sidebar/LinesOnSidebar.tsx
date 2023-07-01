@@ -1,35 +1,53 @@
 import { useState } from "react";
-import stopsData from "../data/stations.json"
+import stopsData from "../data/stations.json";
 
-interface stopsData {
-  [line: string]: {
-    stops: string[];
-  };
-}
+function LinesOnSidebar({ onSelectLine }) {
+  const [selectedLine, setSelectedLine] = useState(null);
 
-function LinesOnSidebar() {
-  const [selectedLine, setSelectedLine] = useState<string | null>(null);
-
-  const handleLineClick = (line: string) => {
+  const handleLineClick = (line) => {
     setSelectedLine(line);
+    onSelectLine(line);
+  };
+
+  const handleBackToLines = () => {
+    setSelectedLine(null);
+    onSelectLine(null);
   };
 
   return (
     <div>
       {selectedLine ? (
         <div className="space-y-2">
-          <h2 className="text-lg font-bold">{selectedLine}</h2>
+          <h2 className="text-lg font-bold text-center">{selectedLine}</h2>
+          <button
+            onClick={handleBackToLines}
+            className="bg-white border rounded-lg px-4 py-2 text-black"
+          >
+            Return to Lines
+          </button>
           <ul>
-            {stopsData[selectedLine].stops.map((stop: string, index: number) => (
-              <li key={index}>{stop}</li>
-            ))}
+            {Object.entries(stopsData[selectedLine].stops).map(
+              ([stopName, stopData], index) => (
+                <li key={index} className="stop-item">
+                  {stopName}
+                  <p>North: </p>
+                  <p>South:</p>
+                  {/* {console.log(stopData)} */}
+                </li>
+              )
+            ) }
           </ul>
         </div>
       ) : (
         <div className="space-y-2">
+          <p className="text-lg">Lines</p>
           <div className="flex flex-col space-y-1">
             {Object.keys(stopsData).map((line) => (
-              <button key={line} onClick={() => handleLineClick(line)}>
+              <button
+                key={line}
+                onClick={() => handleLineClick(line)}
+                className="border rounded-lg px-4 py-2 text-white"
+              >
                 {line}
               </button>
             ))}

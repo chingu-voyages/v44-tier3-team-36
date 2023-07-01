@@ -6,6 +6,7 @@ const results = {};
 fs.createReadStream("Stations.csv")
   .pipe(csv({}))
   .on("data", (data) => {
+    const stopId = data["GTFS Stop ID"];
     const daytimeRoutes = data["Daytime Routes"].split(" ");
     const stopName = data["Stop Name"];
     const latitude = parseFloat(data["GTFS Latitude"]);
@@ -16,7 +17,10 @@ fs.createReadStream("Stations.csv")
         results[line] = { stops: {} };
       }
 
-      results[line].stops[stopName] = { coordinates: [latitude, longitude] };
+      results[line].stops[stopName] = {
+        stopId,
+        coordinates: [latitude, longitude],
+      };
     });
   })
   .on("end", () => {
