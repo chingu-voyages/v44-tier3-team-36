@@ -7,6 +7,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .stop-item {
     border: 1px solid white;
     padding: 10px;

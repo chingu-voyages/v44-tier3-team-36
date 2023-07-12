@@ -17,8 +17,8 @@ fs.createReadStream("Stations.csv")
         results[line] = { stops: {} };
       }
 
-      results[line].stops[stopName] = {
-        stopId,
+      results[line].stops[stopId] = {
+        stopName,
         coordinates: [latitude, longitude],
       };
     });

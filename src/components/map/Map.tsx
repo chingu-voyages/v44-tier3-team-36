@@ -1,8 +1,10 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import stopsData from "../data/stations.json"
+import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
+import Pathway from "./Pathway";
+import stopsData from "../data/stations.json";
+import "./Map.css";
 
 function Map({ selectedLine }) {
-  const position: [number, number] = [40.7128, -74.006];
+  const position = [40.7128, -74.006];
 
   return (
     <div className="flex-grow">
@@ -10,29 +12,39 @@ function Map({ selectedLine }) {
         center={position}
         zoom={13}
         style={{ height: "100vh" }}
-        zoomControl = {false}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Coordinates of stations by the line selected from sidebar */}
         {selectedLine && (
-          Object.entries(stopsData[selectedLine].stops).map(
-            ([stopName, stopData], index) => (
-              <Marker
-                key={index}
-                position={stopData.coordinates}
-              >
-                <Popup>{stopName}</Popup>
-              </Marker>
-            )
-          )
+          <>
+            {Object.entries(stopsData[selectedLine].stops).map(
+              ([stopName, stopData], index) => (
+                <Marker
+                  key={index}
+                  position={stopData.coordinates}
+                  icon={whiteCircleIcon}
+                >
+                  <Tooltip className="custom-tooltip" permanent>
+                    {stopName}
+                  </Tooltip>
+                </Marker>
+              )
+            )}
+            <Pathway selectedLine={selectedLine} />
+          </>
         )}
       </MapContainer>
     </div>
   );
 }
+
+const whiteCircleIcon = L.divIcon({
+  className: "white-circle-icon",
+  iconSize: [10, 10],
+});
 
 export default Map;
