@@ -20,7 +20,7 @@ import pathway_M from "../data/pathway/json/M.json";
 import pathway_N from "../data/pathway/json/N.json";
 import pathway_Q from "../data/pathway/json/Q.json";
 import pathway_R from "../data/pathway/json/R.json";
-
+import pathway_SI from "../data/pathway/json/SI.json"
 
 
 const pathwayDataMap = {
@@ -45,6 +45,7 @@ const pathwayDataMap = {
   "N": { data: pathway_N, color: "black" },
   "Q": { data: pathway_Q, color: "black" },
   "R": { data: pathway_R, color: "blue" },
+  "SI": { data: pathway_SI, color: "blue" }
 };
 
 function Pathway({ selectedLine }) {

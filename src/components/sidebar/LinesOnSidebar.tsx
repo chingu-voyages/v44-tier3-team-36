@@ -4,11 +4,13 @@ import stopsData from "../data/stations.json";
 function LinesOnSidebar({ onSelectLine }) {
   const [selectedLine, setSelectedLine] = useState(null);
   const [arrivalTimes, setArrivalTimes] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLineClick = (line) => {
     setSelectedLine(line);
     onSelectLine(line);
     setArrivalTimes({});
+    setIsLoading(true);
   };
 
   const handleBackToLines = () => {
@@ -19,6 +21,7 @@ function LinesOnSidebar({ onSelectLine }) {
 
   const getArrivalTime = (stopId, direction) => {
     //data to check selected line, the stopid, and the direction is availabale
+
     if (
       arrivalTimes[selectedLine] &&
       arrivalTimes[selectedLine][stopId] &&
@@ -26,48 +29,70 @@ function LinesOnSidebar({ onSelectLine }) {
     ) {
       const arrivals = arrivalTimes[selectedLine][stopId][direction];
       //if the north or south is there
+
       if (arrivals.length > 0) {
+        const validArrivals = arrivals.filter(
+          (arrival) => arrival.time >= -100
+        );
         //filters the array of arrival times when the time is greater or equal to -100 seconds
         //sort smallest to biggest, take first 2 or 3
-        const validArrivals = arrivals.filter((arrival) => arrival.time >= -100);
         if (validArrivals.length > 0) {
           const earliestArrivalTime = Math.min(
             ...validArrivals.map((arrival) => arrival.time)
           );
           //if time negative train arrivaed at station
+
           if (earliestArrivalTime < 0) {
             return "Train has arrived";
+          } else if (earliestArrivalTime === 0) {
+            return "0 minutes";
           } else {
             const timeInSeconds = earliestArrivalTime;
-            const timeInMinutes = Math.floor(timeInSeconds / 60); // Convert seconds to minutes
-            return timeInMinutes;
+            const timeInMinutes = Math.floor(timeInSeconds / 60);
+            return `${timeInMinutes} minutes`;
           }
         }
       }
     }
     return null;
   };
-  
 
   //fetch to get backend for arrival time
   //make it so that there is a time where it refreshes
+  //when arrivaltimes not as dependency time doesn't show?
   useEffect(() => {
-    const url = "http://localhost:8080/api/v1/times";
+    const fetchArrivalTimes = () => {
+      if (selectedLine) {
+        setIsLoading(true);
+        const url = "http://localhost:8080/api/v1/times";
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setArrivalTimes(data.arrivalTimes);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, [arrivalTimes]);
+        fetch(url)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Error: ${response.status} ${response.statusText}`
+              );
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setArrivalTimes(data.arrivalTimes);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    };
+
+    fetchArrivalTimes();
+
+    const timer = setInterval(fetchArrivalTimes, 10000);
+
+    return () => clearInterval(timer);
+  }, [selectedLine]);
 
   return (
     <div>
@@ -80,21 +105,21 @@ function LinesOnSidebar({ onSelectLine }) {
           >
             Return to Lines
           </button>
-          <ul>
-            {Object.entries(stopsData[selectedLine].stops).map(
-              ([stopId, stopData], index) => (
-                <li key={index} className="stop-item">
-                  {stopData.stopName}
-                  <p>
-                    North: {getArrivalTime(stopId, "north")} minutes
-                  </p>
-                  <p>
-                    South: {getArrivalTime(stopId, "south")} minutes
-                  </p>
-                </li>
-              )
-            )}
-          </ul>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <ul>
+              {Object.entries(stopsData[selectedLine].stops).map(
+                ([stopId, stopData], index) => (
+                  <li key={index} className="stop-item">
+                    {stopData.stopName}
+                    <p>North: {getArrivalTime(stopId, "north")}</p>
+                    <p>South: {getArrivalTime(stopId, "south")}</p>
+                  </li>
+                )
+              )}
+            </ul>
+          )}
         </div>
       ) : (
         <div className="space-y-2">

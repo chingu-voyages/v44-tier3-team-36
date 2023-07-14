@@ -29,7 +29,7 @@ function Map({ selectedLine }) {
                   icon={whiteCircleIcon}
                 >
                   <Tooltip className="custom-tooltip" permanent>
-                    {stopName}
+                    {stopData.stopName}
                   </Tooltip>
                 </Marker>
               )
