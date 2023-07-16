@@ -44,7 +44,7 @@ function Map({ selectedLine }) {
 
 const whiteCircleIcon = L.divIcon({
   className: "white-circle-icon",
-  iconSize: [10, 10],
+  iconSize: [9, 9],
 });
 
 export default Map;

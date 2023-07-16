@@ -42,9 +42,9 @@ const pathwayDataMap = {
   "J": { data: pathway_J, color: "brown" },
   "L": { data: pathway_L, color: "gray" },
   "M": { data: pathway_M, color: "orange" },
-  "N": { data: pathway_N, color: "black" },
-  "Q": { data: pathway_Q, color: "black" },
-  "R": { data: pathway_R, color: "blue" },
+  "N": { data: pathway_N, color: "yellow" },
+  "Q": { data: pathway_Q, color: "yellow" },
+  "R": { data: pathway_R, color: "yellow" },
   "SI": { data: pathway_SI, color: "blue" }
 };
 
@@ -61,8 +61,8 @@ function Pathway({ selectedLine }) {
             point.longitude,
           ])}
           color={lineColor}
-          weight={3}
-          opacity={0.7}
+          weight={5}
+          opacity={1}
         />
       )}
     </div>
