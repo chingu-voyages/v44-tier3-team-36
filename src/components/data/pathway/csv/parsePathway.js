@@ -4,7 +4,7 @@ import fs from "fs";
 
 // const filenames = ["1", "2", "3", "4", "5", "6", "7", "A", "B", "C", "D", "E", "F", "G", "H", "J", "L", "M", "N", "Q", "R", "SIR"];
 
-const filenames = ["5"]
+const filenames = ["W"]
 
 filenames.forEach((filename) => {
     const results = [];

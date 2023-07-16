@@ -21,8 +21,9 @@ import pathway_N from "../data/pathway/json/N.json";
 import pathway_Q from "../data/pathway/json/Q.json";
 import pathway_R from "../data/pathway/json/R.json";
 import pathway_SI from "../data/pathway/json/SI.json"
+import pathway_W from "../data/pathway/json/W.json"
 
-
+//Z train shares the same pathway as J, Z is express and runs during a certain time
 const pathwayDataMap = {
   "1": { data: pathway_1, color: "red" },
   "2": { data: pathway_2, color: "red" },
@@ -45,7 +46,9 @@ const pathwayDataMap = {
   "N": { data: pathway_N, color: "yellow" },
   "Q": { data: pathway_Q, color: "yellow" },
   "R": { data: pathway_R, color: "yellow" },
-  "SI": { data: pathway_SI, color: "blue" }
+  "SI": { data: pathway_SI, color: "blue" },
+  "W": { data: pathway_W, color: "yellow"},
+  "Z": { data: pathway_J, color: "brown" }
 };
 
 function Pathway({ selectedLine }) {
