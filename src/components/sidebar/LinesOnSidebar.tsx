@@ -34,6 +34,7 @@ function LinesOnSidebar({ onSelectLine }) {
         const validArrivals = arrivals.filter(
           (arrival) => arrival.time >= -100
         );
+
         //filters the array of arrival times when the time is greater or equal to -100 seconds
         //sort smallest to biggest, take first 2 or 3
         if (validArrivals.length > 0) {
@@ -54,12 +55,13 @@ function LinesOnSidebar({ onSelectLine }) {
         }
       }
     }
-    return null;
+    return "Train has yet to arrive";
   };
 
   //fetch to get backend for arrival time
   //make it so that there is a time where it refreshes
   //when arrivaltimes not as dependency time doesn't show?
+
   useEffect(() => {
     const fetchArrivalTimes = () => {
       if (selectedLine) {
