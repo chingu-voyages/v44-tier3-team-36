@@ -51,7 +51,10 @@ const pathwayDataMap = {
   "Z": { data: pathway_J, color: "brown" }
 };
 
+
 function Pathway({ selectedLine }) {
+  //so the pathway is extracted based on the selectedLine, so if someone selects 1 from the sidebar, it goes into the pathwayDataMap and uses this "1": { data: pathway_1, color: "red" }
+  //the pathway_1 is the json data of the pathway of the 1 train. In the return the data is mapped through to get the latitude and longitude of the 1 trains pathway.
   const pathwayData = pathwayDataMap[selectedLine] || null;
   const lineColor = pathwayData ? pathwayData.color : "";
 

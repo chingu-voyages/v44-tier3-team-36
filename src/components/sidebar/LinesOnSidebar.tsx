@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import stopsData from "../data/stations.json";
 
 function LinesOnSidebar({ onSelectLine }) {
+  //stores current selected line
   const [selectedLine, setSelectedLine] = useState(null);
+  //stores the arrival times of the selected train
   const [arrivalTimes, setArrivalTimes] = useState({});
+  //boolean to load the page for the times to update
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLineClick = (line) => {
@@ -13,6 +16,7 @@ function LinesOnSidebar({ onSelectLine }) {
     setIsLoading(true);
   };
 
+  //when return to line is pressed, resets the selectedLine, onSelectLine, and setArrivalTimes
   const handleBackToLines = () => {
     setSelectedLine(null);
     onSelectLine(null);
@@ -20,33 +24,39 @@ function LinesOnSidebar({ onSelectLine }) {
   };
 
   const getArrivalTime = (stopId, direction) => {
-    //data to check selected line, the stopid, and the direction is availabale
-
+    //data to check selected line, the stopid, and the direction exists
+    //for example it looks to see if it exists like this
+    // selectedLine: {
+    // stopId: {
+    //   north: [arrival],
+    //   south: [arrival]
     if (
       arrivalTimes[selectedLine] &&
       arrivalTimes[selectedLine][stopId] &&
       arrivalTimes[selectedLine][stopId][direction]
     ) {
       const arrivals = arrivalTimes[selectedLine][stopId][direction];
-      //if the north or south is there
 
+      //checks to see if there is any available arrival times in the north and south
+      //if so it then filters arrivals and checks if the time is greater than or equal to -100 seconds.
+      //When the time is negative it either means the train has arrived or left the station, I am using -100 seconds as a threshold for the
+      //train arriving and anything over we can assume the trian has already left. The new times get assigned to a array called validArrivals
       if (arrivals.length > 0) {
         const validArrivals = arrivals.filter(
           (arrival) => arrival.time >= -100
         );
 
-        //filters the array of arrival times when the time is greater or equal to -100 seconds
-        //sort smallest to biggest, take first 2 or 3
+        //the backend sorts the time from the farthest to the closeste. To get the earlist train arriving, this sorts it from closest to farthest.
+        //this then gets assigned to a array called earliestArrivalTime
         if (validArrivals.length > 0) {
           const earliestArrivalTime = Math.min(
             ...validArrivals.map((arrival) => arrival.time)
           );
-          //if time negative train arrivaed at station
 
-          if (earliestArrivalTime < 0) {
+          //if the time is negative or equal to zero the train has arrived at station
+          //if not it takes the time of the closest arrival, divides it by 60 to get the time in minutes
+          if (earliestArrivalTime <= 0) {
             return "Train has arrived";
-          } else if (earliestArrivalTime === 0) {
-            return "0 minutes";
           } else {
             const timeInSeconds = earliestArrivalTime;
             const timeInMinutes = Math.floor(timeInSeconds / 60);
@@ -59,14 +69,17 @@ function LinesOnSidebar({ onSelectLine }) {
   };
 
   //fetch to get backend for arrival time
+
+  //Tasks
   //make it so that there is a time where it refreshes
   //when arrivaltimes not as dependency time doesn't show?
 
   useEffect(() => {
+    //call back function, takes selected line as an argument, will change when the selectedLine state changes
     const fetchArrivalTimes = () => {
       if (selectedLine) {
         setIsLoading(true);
-        const url = "http://localhost:8080/api/v1/times";
+        const url = "http://mtatracker.us-east-2.elasticbeanstalk.com/api/v1/times";
 
         fetch(url)
           .then((response) => {
@@ -77,6 +90,7 @@ function LinesOnSidebar({ onSelectLine }) {
             }
             return response.json();
           })
+          //updates the setArrivalTimes state with the time of train arrivals
           .then((data) => {
             setArrivalTimes(data.arrivalTimes);
           })
@@ -90,7 +104,7 @@ function LinesOnSidebar({ onSelectLine }) {
     };
 
     fetchArrivalTimes();
-
+    // timer set to 10 seconds to call the fetchArrivalTimes 
     const timer = setInterval(fetchArrivalTimes, 10000);
 
     return () => clearInterval(timer);

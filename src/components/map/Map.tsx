@@ -5,6 +5,7 @@ import "./Map.css";
 
 function Map({ selectedLine }) {
   const position = [40.7128, -74.006];
+  //selectedLine gets passed to Pathway
   
 
   return (

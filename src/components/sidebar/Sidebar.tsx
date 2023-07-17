@@ -1,5 +1,6 @@
 import LinesOnSidebar from "./LinesOnSidebar";
 
+//styling of the sidebar
 function Sidebar({ onSelectLine }) {
   return (
     <aside
