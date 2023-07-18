@@ -7,6 +7,9 @@ function Map({ selectedLine }) {
   const position = [40.7128, -74.006];
   //selectedLine gets passed to Pathway
   
+  //link to get coordinates of train location, the backend is hosted here
+  //this link will be used to render markers of where the train is along the trains pathway
+  //http://mtatracker.us-east-2.elasticbeanstalk.com/api/v1/trains
 
   return (
     <div className="flex-grow">

@@ -24,6 +24,9 @@ import pathway_SI from "../data/pathway/json/SI.json"
 import pathway_W from "../data/pathway/json/W.json"
 
 //Z train shares the same pathway as J, Z is express and runs during a certain time
+//the pathways being imported are the coordinates of the train's path. it is the line you see when you click on the sidebar
+//I parsed the static data given by the mta of the coordinates and created separate json files. 
+//The letter followed by the pathway_ is the name of the train
 const pathwayDataMap = {
   "1": { data: pathway_1, color: "red" },
   "2": { data: pathway_2, color: "red" },
@@ -53,8 +56,10 @@ const pathwayDataMap = {
 
 
 function Pathway({ selectedLine }) {
-  //so the pathway is extracted based on the selectedLine, so if someone selects 1 from the sidebar, it goes into the pathwayDataMap and uses this "1": { data: pathway_1, color: "red" }
-  //the pathway_1 is the json data of the pathway of the 1 train. In the return the data is mapped through to get the latitude and longitude of the 1 trains pathway.
+  //so the pathway is extracted based on the selectedLine, so if someone selects 1 from the sidebar, 
+  //it goes into the pathwayDataMap and uses this "1": { data: pathway_1, color: "red" }
+  //the pathway_1 is the json data of the pathway of the 1 train. In the return the data is mapped through to 
+  //get the latitude and longitude of the 1 trains pathway.
   const pathwayData = pathwayDataMap[selectedLine] || null;
   const lineColor = pathwayData ? pathwayData.color : "";
 
