@@ -4,8 +4,6 @@ import { LoginPage, SignUpPage } from "./Routes.ts";
 import RenderMap from "./components/rendermap/RenderMap.tsx";
 
 function App() {
-
-
   return (
     <div>
       <BrowserRouter>

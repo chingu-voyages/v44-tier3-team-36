@@ -79,7 +79,7 @@ function LinesOnSidebar({ onSelectLine }) {
     const fetchArrivalTimes = () => {
       if (selectedLine) {
         setIsLoading(true);
-        const url = "http://mtatracker.us-east-2.elasticbeanstalk.com/api/v1/times";
+        const url = "https://gatekeeper.up.railway.app/MTATRACKER/api/v1/times";
 
         fetch(url)
           .then((response) => {

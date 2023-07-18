@@ -9,7 +9,7 @@ function Map({ selectedLine }) {
   
   //link to get coordinates of train location, the backend is hosted here
   //this link will be used to render markers of where the train is along the trains pathway
-  //http://mtatracker.us-east-2.elasticbeanstalk.com/api/v1/trains
+  //https://gatekeeper.up.railway.app/MTATRACKER/api/v1/trains
 
   return (
     <div className="flex-grow">
