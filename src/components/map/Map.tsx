@@ -34,7 +34,6 @@ function Map({ selectedLine }) {
   }, []);
 
   const getIconForTrain = (trainLetter) => {
-    const trainIconPath = `./train_icons/${trainLetter}.png`;
 
     const trainIcon = L.icon({
       iconUrl: BIcon,
