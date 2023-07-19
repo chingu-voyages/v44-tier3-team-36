@@ -4,6 +4,7 @@ import stopsData from "../data/stations.json";
 import L from "leaflet";
 import "./Map.css";
 import { useState, useEffect } from "react";
+import BIcon from "./train_icons/B.png"
 
 function Map({ selectedLine }) {
   const position = [40.7128, -74.006];
@@ -36,7 +37,7 @@ function Map({ selectedLine }) {
     const trainIconPath = `./train_icons/${trainLetter}.png`;
 
     const trainIcon = L.icon({
-      iconUrl: trainIconPath,
+      iconUrl: BIcon,
       iconSize: [30, 30],
     });
 
