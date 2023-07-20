@@ -28,7 +28,7 @@ function Map({ selectedLine }) {
     //updates every 15 seconds
     fetchTrainLocations();
 
-    const timer = setInterval(fetchTrainLocations, 15000);
+    const timer = setInterval(fetchTrainLocations, 30000);
 
     return () => clearInterval(timer);
   }, []);
