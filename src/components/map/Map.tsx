@@ -4,7 +4,7 @@ import stopsData from "../data/stations.json";
 import L from "leaflet";
 import "./Map.css";
 import { useState, useEffect } from "react";
-import BIcon from "./train_icons/B.png"
+import BIcon from "./train_icons/B.png";
 
 function Map({ selectedLine }) {
   const position = [40.7128, -74.006];
@@ -34,7 +34,6 @@ function Map({ selectedLine }) {
   }, []);
 
   const getIconForTrain = (trainLetter) => {
-
     const trainIcon = L.icon({
       iconUrl: BIcon,
       iconSize: [30, 30],
@@ -57,11 +56,11 @@ function Map({ selectedLine }) {
         />
 
         {selectedLine && (
-          <>
+          <div>
             {Object.entries(stopsData[selectedLine].stops).map(
-              ([stopName, stopData], index) => (
+              ([stopName, stopData]) => (
                 <Marker
-                  key={index}
+                  key={stopName}
                   position={stopData.coordinates}
                   icon={whiteCircleIcon}
                 >
@@ -71,51 +70,44 @@ function Map({ selectedLine }) {
                 </Marker>
               )
             )}
-
             {Object.entries(trainLocations).map(([trainLetter, trainData]) => {
-              const northBound =
-                trainData.north && trainData.north.length > 0
-                  ? trainData.north[0]
-                  : null;
-              const southBound =
-                trainData.south && trainData.south.length > 0
-                  ? trainData.south[0]
-                  : null;
+              const northBoundTrains = trainData.north || [];
+              const southBoundTrains = trainData.south || [];
 
               if (trainLetter === selectedLine) {
                 return (
-                  <>
-                    {northBound && (
+                  <div key={`train_${trainLetter}`}>
+                    {northBoundTrains.map((northTrain, index) => (
                       <Marker
-                        key={`${trainLetter}_north`}
-                        position={[northBound.latitude, northBound.longitude]}
+                        key={`north_${trainLetter}_${index}`}
+                        position={[northTrain.latitude, northTrain.longitude]}
                         icon={getIconForTrain(trainLetter)}
                       >
                         <Tooltip className="custom-tooltip" permanent>
                           {`north-bound-${trainLetter}`}
                         </Tooltip>
                       </Marker>
-                    )}
+                    ))}
 
-                    {southBound && (
+                    {southBoundTrains.map((southTrain, index) => (
                       <Marker
-                        key={`${trainLetter}_south`}
-                        position={[southBound.latitude, southBound.longitude]}
+                        key={`south_${trainLetter}_${index}`}
+                        position={[southTrain.latitude, southTrain.longitude]}
                         icon={getIconForTrain(trainLetter)}
                       >
                         <Tooltip className="custom-tooltip" permanent>
                           {`south-bound-${trainLetter}`}
                         </Tooltip>
                       </Marker>
-                    )}
-                  </>
+                    ))}
+                  </div>
                 );
               }
+
               return null;
             })}
-
             <Pathway selectedLine={selectedLine} />
-          </>
+          </div>
         )}
       </MapContainer>
     </div>
