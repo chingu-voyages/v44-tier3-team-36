@@ -4,12 +4,13 @@ import stopsData from "../data/stations.json";
 import L from "leaflet";
 import "./Map.css";
 import { useState, useEffect } from "react";
-import BIcon from "./train_icons/B.png";
+import { IconData } from "./AllIcons";
 
-function Map({ selectedLine }) {
+function Map({ selectedLine }: { selectedLine: string }) {
   const position = [40.7128, -74.006];
   const [trainLocations, setTrainLocations] = useState({});
 
+  const URL = `https://gatekeeper.up.railway.app/MTATRACKER/api/v1/trains`;
   //selectedLine gets passed to Pathway
 
   //link to get coordinates of train location, the backend is hosted here
@@ -18,14 +19,16 @@ function Map({ selectedLine }) {
 
   useEffect(() => {
     const fetchTrainLocations = () => {
-      fetch("https://gatekeeper.up.railway.app/MTATRACKER/api/v1/trains")
+      fetch("http://localhost:8080/api/v1/trains")
         .then((response) => response.json())
+        // .then((data) => setTrainLocations(data.positions))
         .then((data) => setTrainLocations(data.positions))
         .catch((error) => {
           console.error("Error:", error);
         });
     };
     //updates every 15 seconds
+
     fetchTrainLocations();
 
     const timer = setInterval(fetchTrainLocations, 30000);
@@ -33,9 +36,10 @@ function Map({ selectedLine }) {
     return () => clearInterval(timer);
   }, []);
 
-  const getIconForTrain = (trainLetter) => {
+  const getIconForTrain = () => {
+    const iconData = IconData[selectedLine] || null;
     const trainIcon = L.icon({
-      iconUrl: BIcon,
+      iconUrl: iconData.data,
       iconSize: [30, 30],
     });
 
@@ -119,4 +123,11 @@ const whiteCircleIcon = L.divIcon({
   iconSize: [9, 9],
 });
 
+const arrowIcon = new L.DivIcon({
+  className: 'arrow-icon',
+  html: `<svg width="30" height="30" viewBox="0 0 30 30" fill="black"><path d="M0 15L30 30V0z" /></svg>`,
+  iconSize: [30, 30],
+});
+
 export default Map;
+
