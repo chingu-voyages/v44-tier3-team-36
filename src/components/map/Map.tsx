@@ -5,6 +5,7 @@ import L from "leaflet";
 import "./Map.css";
 import { useState, useEffect } from "react";
 import { IconData } from "./AllIcons";
+import arrow from "./arrow.png";
 
 function Map({ selectedLine }: { selectedLine: string }) {
   const position = [40.7128, -74.006];
@@ -87,9 +88,7 @@ function Map({ selectedLine }: { selectedLine: string }) {
                         position={[northTrain.latitude, northTrain.longitude]}
                         icon={getIconForTrain(trainLetter)}
                       >
-                        <Tooltip className="custom-tooltip" permanent>
-                          {`north-bound-${trainLetter}`}
-                        </Tooltip>
+                        {/* <Tooltip className="custom-tooltip" permanent></Tooltip> */}
                       </Marker>
                     ))}
 
@@ -99,9 +98,7 @@ function Map({ selectedLine }: { selectedLine: string }) {
                         position={[southTrain.latitude, southTrain.longitude]}
                         icon={getIconForTrain(trainLetter)}
                       >
-                        <Tooltip className="custom-tooltip" permanent>
-                          {`south-bound-${trainLetter}`}
-                        </Tooltip>
+                        {/* <Tooltip className="custom-tooltip" permanent></Tooltip> */}
                       </Marker>
                     ))}
                   </div>
@@ -123,11 +120,4 @@ const whiteCircleIcon = L.divIcon({
   iconSize: [9, 9],
 });
 
-const arrowIcon = new L.DivIcon({
-  className: 'arrow-icon',
-  html: `<svg width="30" height="30" viewBox="0 0 30 30" fill="black"><path d="M0 15L30 30V0z" /></svg>`,
-  iconSize: [30, 30],
-});
-
 export default Map;
-

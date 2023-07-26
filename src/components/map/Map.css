@@ -6,11 +6,11 @@
 }
 
 .custom-tooltip {
-  background-color: transparent;
-  border: none;
+  border-color: black;
+  border-radius: 1px;
   box-shadow: none;
   font-weight: bold;
-  padding: 8px;
+  padding: 2px;
   white-space: nowrap;
 }
 
@@ -18,7 +18,4 @@
   filter: brightness(80%);
 }
 
-.arrow-icon path {
-  fill: black;
-}
 
