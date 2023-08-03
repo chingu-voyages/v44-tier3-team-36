@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import stopsData from "../data/stations.json";
+import { Link } from "react-router-dom";
 
 function LinesOnSidebar({ onSelectLine }) {
   //stores current selected line
@@ -74,14 +75,16 @@ function LinesOnSidebar({ onSelectLine }) {
   //make it so that there is a time where it refreshes
   //when arrivaltimes not as dependency time doesn't show?
 
+  const URL = `http://localhost:5000/api/v1/times`;
+
   useEffect(() => {
     //call back function, takes selected line as an argument, will change when the selectedLine state changes
     const fetchArrivalTimes = () => {
       if (selectedLine) {
         setIsLoading(true);
-        const url = "http://localhost:8080/api/v1/times";
+        // const url = "http://localhost:8080/api/v1/times";
 
-        fetch(url)
+        fetch(URL)
           .then((response) => {
             if (!response.ok) {
               throw new Error(
@@ -104,7 +107,7 @@ function LinesOnSidebar({ onSelectLine }) {
     };
 
     fetchArrivalTimes();
-    // timer set to 10 seconds to call the fetchArrivalTimes 
+    // timer set to 10 seconds to call the fetchArrivalTimes
     const timer = setInterval(fetchArrivalTimes, 10000);
 
     return () => clearInterval(timer);
@@ -112,6 +115,14 @@ function LinesOnSidebar({ onSelectLine }) {
 
   return (
     <div>
+      <div className="text-center mb-4 flex flex-col space-y-1">
+        <button className="border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
+          <Link to="/login">Login</Link>
+        </button>
+        <p className="mt-2">
+          Don't have an account? <Link to="/sign-up">Sign up</Link>
+        </p>
+      </div>
       {selectedLine ? (
         <div className="space-y-2">
           <h2 className="text-lg font-bold text-center">{selectedLine}</h2>

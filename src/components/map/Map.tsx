@@ -3,24 +3,25 @@ import Pathway from "./Pathway";
 import stopsData from "../data/stations.json";
 import L from "leaflet";
 import "./Map.css";
+import GetIconForTrain from "./GetIconForTrain";
 import { useState, useEffect } from "react";
-import { IconData } from "./AllIcons";
-import arrow from "./arrow.png";
 
 function Map({ selectedLine }: { selectedLine: string }) {
   const position = [40.7128, -74.006];
   const [trainLocations, setTrainLocations] = useState({});
 
-  const URL = `https://gatekeeper.up.railway.app/MTATRACKER/api/v1/trains`;
+  const URL = `http://localhost:5000/api/v1/trains`;
   //selectedLine gets passed to Pathway
 
   //link to get coordinates of train location, the backend is hosted here
   //this link will be used to render markers of where the train is along the trains pathway
   //https://gatekeeper.up.railway.app/MTATRACKER/api/v1/trains
 
+  // const url = "http://localhost:8080/api/v1/trains";
+
   useEffect(() => {
     const fetchTrainLocations = () => {
-      fetch("http://localhost:8080/api/v1/trains")
+      fetch(URL)
         .then((response) => response.json())
         // .then((data) => setTrainLocations(data.positions))
         .then((data) => setTrainLocations(data.positions))
@@ -36,16 +37,6 @@ function Map({ selectedLine }: { selectedLine: string }) {
 
     return () => clearInterval(timer);
   }, []);
-
-  const getIconForTrain = () => {
-    const iconData = IconData[selectedLine] || null;
-    const trainIcon = L.icon({
-      iconUrl: iconData.data,
-      iconSize: [30, 30],
-    });
-
-    return trainIcon;
-  };
 
   return (
     <div className="flex-grow">
@@ -75,38 +66,10 @@ function Map({ selectedLine }: { selectedLine: string }) {
                 </Marker>
               )
             )}
-            {Object.entries(trainLocations).map(([trainLetter, trainData]) => {
-              const northBoundTrains = trainData.north || [];
-              const southBoundTrains = trainData.south || [];
-
-              if (trainLetter === selectedLine) {
-                return (
-                  <div key={`train_${trainLetter}`}>
-                    {northBoundTrains.map((northTrain, index) => (
-                      <Marker
-                        key={`north_${trainLetter}_${index}`}
-                        position={[northTrain.latitude, northTrain.longitude]}
-                        icon={getIconForTrain(trainLetter)}
-                      >
-                        {/* <Tooltip className="custom-tooltip" permanent></Tooltip> */}
-                      </Marker>
-                    ))}
-
-                    {southBoundTrains.map((southTrain, index) => (
-                      <Marker
-                        key={`south_${trainLetter}_${index}`}
-                        position={[southTrain.latitude, southTrain.longitude]}
-                        icon={getIconForTrain(trainLetter)}
-                      >
-                        {/* <Tooltip className="custom-tooltip" permanent></Tooltip> */}
-                      </Marker>
-                    ))}
-                  </div>
-                );
-              }
-
-              return null;
-            })}
+            <GetIconForTrain
+              trainLocations={trainLocations}
+              selectedLine={selectedLine}
+            />
             <Pathway selectedLine={selectedLine} />
           </div>
         )}

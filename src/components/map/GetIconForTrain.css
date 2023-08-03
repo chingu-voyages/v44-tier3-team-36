@@ -1,0 +1,15 @@
+
+  
+  .arrow-icon,
+  .train-icon-img {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .arrow-icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
