@@ -10,7 +10,7 @@ function Map({ selectedLine }: { selectedLine: string }) {
   const position = [40.7128, -74.006];
   const [trainLocations, setTrainLocations] = useState({});
 
-  const URL = `http://localhost:5000/api/v1/trains`;
+  const URL = `http://localhost:5000/api/v1/data/trains`;
   //selectedLine gets passed to Pathway
 
   //link to get coordinates of train location, the backend is hosted here
@@ -48,7 +48,7 @@ function Map({ selectedLine }: { selectedLine: string }) {
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
 
         {selectedLine && (

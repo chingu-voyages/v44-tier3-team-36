@@ -75,7 +75,7 @@ function LinesOnSidebar({ onSelectLine }) {
   //make it so that there is a time where it refreshes
   //when arrivaltimes not as dependency time doesn't show?
 
-  const URL = `http://localhost:5000/api/v1/times`;
+  const URL = `http://localhost:5000/api/v1/data/times`;
 
   useEffect(() => {
     //call back function, takes selected line as an argument, will change when the selectedLine state changes
