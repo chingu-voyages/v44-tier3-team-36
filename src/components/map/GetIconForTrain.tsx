@@ -10,11 +10,26 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
     const arrowIcon = L.divIcon({
       html: `<img src="${arrow}" style="transform: rotate(${
         (bearing * 180) / Math.PI
-      }deg);  height: 20px; width: 15px" />`,
+      }deg);  position: absolute; top: -60%; right: 62%; height: 20px; width: 15px" />`,
       iconSize: [30, 30],
       iconAnchor: [15, 15],
       popupAnchor: [0, -15],
-      className: "arrow-icon", 
+      className: "arrow-icon",
+    });
+
+    return arrowIcon;
+  };
+
+  const southArrowIcon = (bearing) => {
+    const arrow = arrowImage;
+    const arrowIcon = L.divIcon({
+      html: `<img src="${arrow}" style="transform: rotate(${
+        (bearing * 180) / Math.PI
+      }deg);  position: absolute; bottom: -60%; left: 62%; height: 20px; width: 15px" />`,
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+      popupAnchor: [0, -15],
+      className: "arrow-icon",
     });
 
     return arrowIcon;
@@ -25,7 +40,7 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
     const trainIcon = L.icon({
       iconUrl: iconData.data,
       iconSize: [30, 30],
-      className: "train-icon", 
+      className: "train-icon",
     });
 
     return trainIcon;
@@ -45,28 +60,28 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
                   <Marker
                     position={[northTrain.latitude, northTrain.longitude]}
                     icon={arrowIcon(northTrain.bearing)}
-                    zIndexOffset={1000} // Set a higher zIndex for the arrow icon
+                    zIndexOffset={1000} 
                   />
-                  {/* <Marker
+                  <Marker
                     key={`north_${trainLetter}_${index}`}
                     position={[northTrain.latitude, northTrain.longitude]}
                     icon={getIconForTrain()}
-                  /> */}
+                  />
                 </div>
               ))}
 
               {southBoundTrains.map((southTrain, index) => (
                 <div key={`south_${trainLetter}_${index}`}>
                   <Marker
-                    position={[southTrain.latitude, southTrain.longitude]}
-                    icon={arrowIcon(southTrain.bearing)}
-                    zIndexOffset={1000} 
-                  />
-                  {/* <Marker
                     key={`south_${trainLetter}_${index}`}
                     position={[southTrain.latitude, southTrain.longitude]}
                     icon={getIconForTrain()}
-                  /> */}
+                  />
+                  <Marker
+                    position={[southTrain.latitude, southTrain.longitude]}
+                    icon={southArrowIcon(southTrain.bearing)}
+                    zIndexOffset={1000}
+                  />
                 </div>
               ))}
             </div>
@@ -80,7 +95,6 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
 
 export default GetIconForTrain;
 
-
 // import { Marker } from "react-leaflet";
 // import { IconData } from "./AllIcons";
 // import L from "leaflet";
@@ -93,7 +107,7 @@ export default GetIconForTrain;
 //     const iconHtml = `
 //       <div style="position: relative; width: 30px; height: 30px; background: transparent;">
 //         <img src="${iconData.data}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;" />
-//         <img src="${arrow}" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(${(bearing * 180) / Math.PI}deg); height: 20px; width: 15px;" />
+//         <img src="${arrow}" style="position: absolute;  left: 50%; transform: translate(-50%, -50%) rotate(${(bearing * 180) / Math.PI}deg); height: 20px; width: 15px;" />
 //       </div>
 //     `;
 
