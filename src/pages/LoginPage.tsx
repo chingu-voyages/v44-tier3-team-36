@@ -1,9 +1,11 @@
 import Login from "../components/login/Login.tsx";
 
+
+
 const LoginPage = () => {
   return (
     <div>
-      <Login />
+      <Login  />
     </div>
   );
 };

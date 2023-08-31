@@ -1,13 +1,16 @@
 import { FormEvent, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { useUserContext } from "../../UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState({ message: "" });
+  const navigate = useNavigate();
+  const { setUserData } = useUserContext()
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -17,16 +20,24 @@ const Login = () => {
       },
     };
 
-    const newForm = new FormData();
-
-    newForm.append("email", email);
-    newForm.append("password", password);
+    const requestData = {
+      email: email,
+      password: password,
+    };
 
     axios
-      .post(`http://localhost:5000/api/v1/auth/authenticate`, newForm, config)
+      .post(
+        `http://localhost:5000/api/v1/auth/authenticate`,
+        requestData,
+        config
+      )
       .then((res: AxiosResponse) => {
         if (res.data.token) {
-          console.log(res.data.token);
+          const { user, token } = res.data; 
+          setUserData(user.email, user.id, token)
+          navigate("/");
+          console.log(res.data);
+          console.log("Token:", token);
         }
       })
       .catch((err: AxiosError) => {
@@ -100,32 +111,6 @@ const Login = () => {
                   />
                 )}
               </div>
-              {/* </div> */}
-              {/* <div className={`flex items-center justify-between`}>
-              <div className={`flex items-center`}>
-                <input
-                  type="checkbox"
-                  name="remember-me"
-                  id="remember-me"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href=".forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div> */}
-              {/* <div> */}
               <button
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"

@@ -10,7 +10,7 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
     const arrowIcon = L.divIcon({
       html: `<img src="${arrow}" style="transform: rotate(${
         (bearing * 180) / Math.PI
-      }deg);  position: absolute; top: -60%; right: 62%; height: 20px; width: 15px" />`,
+      }deg);  position: absolute; top: -45%; right: 10%; height: 20px; width: 15px" />`,
       iconSize: [30, 30],
       iconAnchor: [15, 15],
       popupAnchor: [0, -15],
@@ -70,7 +70,7 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
                 </div>
               ))}
 
-              {southBoundTrains.map((southTrain, index) => (
+              {/* {southBoundTrains.map((southTrain, index) => (
                 <div key={`south_${trainLetter}_${index}`}>
                   <Marker
                     key={`south_${trainLetter}_${index}`}
@@ -83,7 +83,7 @@ function GetIconForTrain({ trainLocations, selectedLine }) {
                     zIndexOffset={1000}
                   />
                 </div>
-              ))}
+              ))} */}
             </div>
           );
         }

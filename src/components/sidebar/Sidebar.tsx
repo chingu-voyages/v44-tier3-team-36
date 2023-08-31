@@ -8,7 +8,7 @@ function Sidebar({ onSelectLine }) {
       style={{ zIndex: 999 }}
     >
       <nav className="space-y-8 text-sm">
-        <LinesOnSidebar onSelectLine={onSelectLine}  />
+        <LinesOnSidebar onSelectLine={onSelectLine} />
       </nav>
     </aside>
   );

@@ -1823,54 +1823,6 @@
       }
     }
   },
-  "S": {
-    "stops": {
-      "901": {
-        "stopName": "Grand Central-42 St",
-        "coordinates": [40.752769, -73.979189]
-      },
-      "902": {
-        "stopName": "Times Sq-42 St",
-        "coordinates": [40.755983, -73.986229]
-      },
-      "D26": {
-        "stopName": "Prospect Park",
-        "coordinates": [40.661614, -73.962246]
-      },
-      "S01": {
-        "stopName": "Franklin Av",
-        "coordinates": [40.680596, -73.955827]
-      },
-      "S03": {
-        "stopName": "Park Pl",
-        "coordinates": [40.674772, -73.957624]
-      },
-      "S04": {
-        "stopName": "Botanic Garden",
-        "coordinates": [40.670343, -73.959245]
-      },
-      "H04": {
-        "stopName": "Broad Channel",
-        "coordinates": [40.608382, -73.815925]
-      },
-      "H12": {
-        "stopName": "Beach 90 St",
-        "coordinates": [40.588034, -73.813641]
-      },
-      "H13": {
-        "stopName": "Beach 98 St",
-        "coordinates": [40.585307, -73.820558]
-      },
-      "H14": {
-        "stopName": "Beach 105 St",
-        "coordinates": [40.583209, -73.827559]
-      },
-      "H15": {
-        "stopName": "Rockaway Park-Beach 116 St",
-        "coordinates": [40.580903, -73.835592]
-      }
-    }
-  },
   "F": {
     "stops": {
       "D42": {

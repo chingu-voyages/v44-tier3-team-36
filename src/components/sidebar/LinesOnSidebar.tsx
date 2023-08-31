@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import stopsData from "../data/stations.json";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../../UserContext";
 
 function LinesOnSidebar({ onSelectLine }) {
+  const { user, logout, token, userId } = useUserContext();
   //stores current selected line
   const [selectedLine, setSelectedLine] = useState(null);
   //stores the arrival times of the selected train
   const [arrivalTimes, setArrivalTimes] = useState({});
   //boolean to load the page for the times to update
   const [isLoading, setIsLoading] = useState(false);
+  //boolean to switch from subscribe to unsubscribe
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleLineClick = (line) => {
+  const handleLineClick = (line: string) => {
     setSelectedLine(line);
     onSelectLine(line);
     setArrivalTimes({});
@@ -24,7 +28,7 @@ function LinesOnSidebar({ onSelectLine }) {
     setArrivalTimes({});
   };
 
-  const getArrivalTime = (stopId, direction) => {
+  const getArrivalTime = (stopId: string, direction: "north" | "south") => {
     //data to check selected line, the stopid, and the direction exists
     //for example it looks to see if it exists like this
     // selectedLine: {
@@ -32,6 +36,7 @@ function LinesOnSidebar({ onSelectLine }) {
     //   north: [arrival],
     //   south: [arrival]
     if (
+      selectedLine &&
       arrivalTimes[selectedLine] &&
       arrivalTimes[selectedLine][stopId] &&
       arrivalTimes[selectedLine][stopId][direction]
@@ -44,7 +49,7 @@ function LinesOnSidebar({ onSelectLine }) {
       //train arriving and anything over we can assume the trian has already left. The new times get assigned to a array called validArrivals
       if (arrivals.length > 0) {
         const validArrivals = arrivals.filter(
-          (arrival) => arrival.time >= -100
+          (arrival: { time: number }) => arrival.time >= -100
         );
 
         //the backend sorts the time from the farthest to the closeste. To get the earlist train arriving, this sorts it from closest to farthest.
@@ -80,7 +85,7 @@ function LinesOnSidebar({ onSelectLine }) {
   useEffect(() => {
     //call back function, takes selected line as an argument, will change when the selectedLine state changes
     const fetchArrivalTimes = () => {
-      if (selectedLine) {
+      if (selectedLine && userId) {
         setIsLoading(true);
         // const url = "http://localhost:8080/api/v1/times";
 
@@ -113,19 +118,83 @@ function LinesOnSidebar({ onSelectLine }) {
     return () => clearInterval(timer);
   }, [selectedLine]);
 
+  // const handleSubscriptionToggle = () => {
+  //   setIsSubscribed((prevSubscribed) => !prevSubscribed);
+  // };
+
+  const handleSubscriptionToggle = () => {
+    if (selectedLine) {
+      const requestData = {
+        userId: userId,
+        routeId: selectedLine,
+      };
+
+      const config = {
+        method: isSubscribed ? "DELETE" : "POST", 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestData),
+      };
+
+      const subscriptionEndpoint = isSubscribed
+        ? `http://localhost:5000/api/v1/subscription/unsubscribe`
+        : `http://localhost:5000/api/v1/subscription/subscribe`;
+
+      fetch(subscriptionEndpoint, config)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data.message); 
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
+
   return (
     <div>
       <div className="text-center mb-4 flex flex-col space-y-1">
-        <button className="border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
-          <Link to="/login">Login</Link>
-        </button>
-        <p className="mt-2">
-          Don't have an account? <Link to="/sign-up">Sign up</Link>
-        </p>
+        {user ? (
+          <>
+            <p>Welcome, {user}</p>
+            <button
+              onClick={logout}
+              className="border rounded-lg px-4 py-2 text-white bg-red-500 hover:bg-red-600 font-bold"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
+              <Link to="/login">Login</Link>
+            </button>
+            <p className="mt-2">
+              Don't have an account? <Link to="/sign-up">Sign up</Link>
+            </p>
+          </>
+        )}
       </div>
       {selectedLine ? (
         <div className="space-y-2">
           <h2 className="text-lg font-bold text-center">{selectedLine}</h2>
+          {user && (
+            <button
+              onClick={handleSubscriptionToggle}
+              className={`border rounded-lg px-4 py-2 text-white ${
+                isSubscribed ? "bg-red-500" : "bg-green-500"
+              } hover:bg-red-600 hover:bg-green-600 font-bold`}
+            >
+              {isSubscribed ? "Unsubscribe" : "Subscribe"}
+            </button>
+          )}
           <button
             onClick={handleBackToLines}
             className="bg-white border rounded-lg px-4 py-2 text-black"

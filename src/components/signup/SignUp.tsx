@@ -12,30 +12,38 @@ const SignUp = () => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState({ message: "" });
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
-
-    const newForm = new FormData();
-
-    newForm.append("firstname", firstname);
-    newForm.append("lastname", lastname);
-    newForm.append("email", email);
-    newForm.append("password", password);
-
-    axios
-      .post(`http://localhost:5000/api/v1/auth/register`, newForm, config)
-      .then((res: AxiosResponse) => {
-        console.log(res);
-      })
-      .catch((err: AxiosError) => {
-        const message: any = err.response?.data;
+  
+    const newUser = {
+      firstname,
+      lastname,
+      email,
+      password,
+    };
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/auth/register`,
+        newUser,
+        config
+      );
+  
+      if (response.status === 200 && response.data.token) {
+        const token = response.data.token;
+        console.log("User registered successfully with token:", token);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message: any = error.response?.data;
         setError(message);
-      });
+      }
+    }
   };
 
   return (
