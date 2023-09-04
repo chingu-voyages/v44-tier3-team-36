@@ -1,10 +1,9 @@
 import LinesOnSidebar from "./LinesOnSidebar";
 
-//styling of the sidebar
 function Sidebar({ onSelectLine }) {
   return (
     <aside
-      className="fixed top-0 left-0 h-screen w-60 p-6 sm:w-60 dark:bg-gray-900 dark:text-gray-100 overflow-y-auto"
+      className="fixed top-6 left-6 h-5/8 w-60 p-8 sm:w-60 bg-white dark:bg-gray-900 text-center text-gray-900 dark:text-gray-100 rounded-lg shadow-lg"
       style={{ zIndex: 999 }}
     >
       <nav className="space-y-8 text-sm">

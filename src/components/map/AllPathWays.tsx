@@ -22,35 +22,36 @@ import pathway_SI from "../data/pathway/json/SI.json";
 import pathway_W from "../data/pathway/json/W.json";
 
 export interface IDataMap {
-    data: { latitude: number, longitude: number }[], color: string
+  data: { latitude: number; longitude: number }[];
+  color: string;
 }
 
 export interface IPathWayDataMap {
-    [key: string]: IDataMap
+  [key: string]: IDataMap;
 }
 //Z train shares the same pathway as J, Z is express and runs during a certain time
 export const pathwayDataMap: IPathWayDataMap = {
-    "1": { data: pathway_1, color: "red" },
-    "2": { data: pathway_2, color: "red" },
-    "3": { data: pathway_3, color: "red" },
-    "4": { data: pathway_4, color: "green" },
-    "5": { data: pathway_5, color: "green" },
-    "6": { data: pathway_6, color: "green" },
-    "7": { data: pathway_7, color: "violet" },
-    "A": { data: pathway_A, color: "blue" },
-    "B": { data: pathway_B, color: "orange" },
-    "C": { data: pathway_C, color: "blue" },
-    "D": { data: pathway_D, color: "orange" },
-    "E": { data: pathway_E, color: "blue" },
-    "F": { data: pathway_F, color: "orange" },
-    "G": { data: pathway_G, color: "lime" },
-    "J": { data: pathway_J, color: "brown" },
-    "L": { data: pathway_L, color: "gray" },
-    "M": { data: pathway_M, color: "orange" },
-    "N": { data: pathway_N, color: "yellow" },
-    "Q": { data: pathway_Q, color: "yellow" },
-    "R": { data: pathway_R, color: "yellow" },
-    "SI": { data: pathway_SI, color: "blue" },
-    "W": { data: pathway_W, color: "yellow" },
-    "Z": { data: pathway_J, color: "brown" }
+  "1": { data: pathway_1, color: "#EE352E" },
+  "2": { data: pathway_2, color: "#EE352E" },
+  "3": { data: pathway_3, color: "#EE352E" },
+  "4": { data: pathway_4, color: "#00933C" },
+  "5": { data: pathway_5, color: "#00933C" },
+  "6": { data: pathway_6, color: "#00933C" },
+  "7": { data: pathway_7, color: "#B933AD" },
+  A: { data: pathway_A, color: "#0039A6" },
+  B: { data: pathway_B, color: "#FF6319" },
+  C: { data: pathway_C, color: "#0039A6" },
+  D: { data: pathway_D, color: "#FF6319" },
+  E: { data: pathway_E, color: "#0039A6" },
+  F: { data: pathway_F, color: "#FF6319" },
+  G: { data: pathway_G, color: "#6CBE45" },
+  J: { data: pathway_J, color: "#996633" },
+  L: { data: pathway_L, color: "#A7A9AC" },
+  M: { data: pathway_M, color: "#FF6319" },
+  N: { data: pathway_N, color: "#FCCC0A" },
+  Q: { data: pathway_Q, color: "#FCCC0A" },
+  R: { data: pathway_R, color: "#FCCC0A" },
+  SI: { data: pathway_SI, color: "blue" },
+  W: { data: pathway_W, color: "#FCCC0A" },
+  Z: { data: pathway_J, color: "brown" },
 };

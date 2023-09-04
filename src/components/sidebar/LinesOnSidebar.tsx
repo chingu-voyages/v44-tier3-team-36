@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import stopsData from "../data/stations.json";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../../UserContext";
+import { lineColors } from "./LineColors";
 
 function LinesOnSidebar({ onSelectLine }) {
   const { user, logout, token, userId } = useUserContext();
@@ -9,16 +10,19 @@ function LinesOnSidebar({ onSelectLine }) {
   const [selectedLine, setSelectedLine] = useState(null);
   //stores the arrival times of the selected train
   const [arrivalTimes, setArrivalTimes] = useState({});
-  //boolean to load the page for the times to update
-  const [isLoading, setIsLoading] = useState(false);
   //boolean to switch from subscribe to unsubscribe
   const [isSubscribed, setIsSubscribed] = useState(false);
+  //dropdown
+  const [expandedStop, setExpandedStop] = useState(null);
+
+  const toggleExpandedStop = (stopId) => {
+    setExpandedStop(expandedStop === stopId ? null : stopId);
+  };
 
   const handleLineClick = (line: string) => {
     setSelectedLine(line);
     onSelectLine(line);
     setArrivalTimes({});
-    setIsLoading(true);
   };
 
   //when return to line is pressed, resets the selectedLine, onSelectLine, and setArrivalTimes
@@ -85,8 +89,7 @@ function LinesOnSidebar({ onSelectLine }) {
   useEffect(() => {
     //call back function, takes selected line as an argument, will change when the selectedLine state changes
     const fetchArrivalTimes = () => {
-      if (selectedLine && userId) {
-        setIsLoading(true);
+      if (selectedLine) {
         // const url = "http://localhost:8080/api/v1/times";
 
         fetch(URL)
@@ -100,20 +103,18 @@ function LinesOnSidebar({ onSelectLine }) {
           })
           //updates the setArrivalTimes state with the time of train arrivals
           .then((data) => {
+            console.log("Arrival Times Data:", data);
             setArrivalTimes(data.arrivalTimes);
           })
           .catch((error) => {
             console.error("Error:", error);
-          })
-          .finally(() => {
-            setIsLoading(false);
           });
       }
     };
 
     fetchArrivalTimes();
     // timer set to 10 seconds to call the fetchArrivalTimes
-    const timer = setInterval(fetchArrivalTimes, 10000);
+    const timer = setInterval(fetchArrivalTimes, 30000);
 
     return () => clearInterval(timer);
   }, [selectedLine]);
@@ -130,7 +131,7 @@ function LinesOnSidebar({ onSelectLine }) {
       };
 
       const config = {
-        method: isSubscribed ? "DELETE" : "POST", 
+        method: isSubscribed ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -145,12 +146,13 @@ function LinesOnSidebar({ onSelectLine }) {
       fetch(subscriptionEndpoint, config)
         .then((response) => {
           if (!response.ok) {
+            console.log(userId);
             throw new Error(`Error: ${response.status} ${response.statusText}`);
           }
           return response.json();
         })
         .then((data) => {
-          console.log(data.message); 
+          console.log(data.message);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -160,10 +162,10 @@ function LinesOnSidebar({ onSelectLine }) {
 
   return (
     <div>
-      <div className="text-center mb-4 flex flex-col space-y-1">
+      <div className="text-center mb-4 space-y-2">
         {user ? (
           <>
-            <p>Welcome, {user}</p>
+            <p className="text-white">Welcome, {user}</p>
             <button
               onClick={logout}
               className="border rounded-lg px-4 py-2 text-white bg-red-500 hover:bg-red-600 font-bold"
@@ -176,60 +178,76 @@ function LinesOnSidebar({ onSelectLine }) {
             <button className="border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
               <Link to="/login">Login</Link>
             </button>
-            <p className="mt-2">
-              Don't have an account? <Link to="/sign-up">Sign up</Link>
-            </p>
+            <p className="mt-2 text-white">Don't have an account?</p>
+            <Link to="/sign-up">Sign up</Link>
           </>
         )}
       </div>
       {selectedLine ? (
-        <div className="space-y-2">
-          <h2 className="text-lg font-bold text-center">{selectedLine}</h2>
-          {user && (
+        <div className="h-4/5 flex flex-col justify-between overflow-y-auto">
+          <div className="space-y-2">
+            <h2 className="text-lg font-bold text-center text-white">
+              {selectedLine}
+            </h2>
+            {user && (
+              <button
+                onClick={handleSubscriptionToggle}
+                className={`border rounded-lg px-4 py-2 text-white ${
+                  isSubscribed ? "bg-red-500" : "bg-green-500"
+                } hover:bg-red-600 hover:bg-green-600 font-bold mx-auto`}
+              >
+                {isSubscribed ? "Unsubscribe" : "Subscribe"}
+              </button>
+            )}
             <button
-              onClick={handleSubscriptionToggle}
-              className={`border rounded-lg px-4 py-2 text-white ${
-                isSubscribed ? "bg-red-500" : "bg-green-500"
-              } hover:bg-red-600 hover:bg-green-600 font-bold`}
+              onClick={handleBackToLines}
+              className="bg-white border rounded-lg px-4 py-2 text-black mx-auto"
             >
-              {isSubscribed ? "Unsubscribe" : "Subscribe"}
+              Return to Lines
             </button>
-          )}
-          <button
-            onClick={handleBackToLines}
-            className="bg-white border rounded-lg px-4 py-2 text-black"
-          >
-            Return to Lines
-          </button>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : (
-            <ul>
+            <ul className="text-white">
               {Object.entries(stopsData[selectedLine].stops).map(
                 ([stopId, stopData], index) => (
-                  <li key={index} className="stop-item">
+                  <li
+                    key={index}
+                    className="stop-item cursor-pointer"
+                    onClick={() => toggleExpandedStop(stopId)}
+                  >
                     {stopData.stopName}
-                    <p>North: {getArrivalTime(stopId, "north")}</p>
-                    <p>South: {getArrivalTime(stopId, "south")}</p>
+                    {expandedStop === stopId && (
+                      <>
+                        <p>North: {getArrivalTime(stopId, "north")}</p>
+                        <p>South: {getArrivalTime(stopId, "south")}</p>
+                      </>
+                    )}
                   </li>
                 )
               )}
             </ul>
-          )}
+          </div>
         </div>
       ) : (
         <div className="space-y-2">
-          <p className="text-lg">Lines</p>
-          <div className="flex flex-col space-y-1">
-            {Object.keys(stopsData).map((line) => (
-              <button
-                key={line}
-                onClick={() => handleLineClick(line)}
-                className="border rounded-lg px-4 py-2 text-white"
-              >
-                {line}
-              </button>
-            ))}
+          <p className="text-2xl font-bold text-white py-2">Lines</p>
+          <div className="flex flex-wrap justify-start">
+            {Object.keys(stopsData)
+              .sort((lineA, lineB) => {
+                const colorA = lineColors[lineA] || "";
+                const colorB = lineColors[lineB] || "";
+                return colorA.localeCompare(colorB);
+              })
+              .map((line) => (
+                <button
+                  key={line}
+                  onClick={() => handleLineClick(line)}
+                  className="w-12 h-12 rounded-full text-lg font-bold text-white flex items-center justify-center mb-2 mr-2 border"
+                  style={{
+                    backgroundColor: lineColors[line], 
+                  }}
+                >
+                  {line}
+                </button>
+              ))}
           </div>
         </div>
       )}

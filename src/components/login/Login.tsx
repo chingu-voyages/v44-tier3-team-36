@@ -10,7 +10,7 @@ const Login = () => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState({ message: "" });
   const navigate = useNavigate();
-  const { setUserData } = useUserContext()
+  const { setUserData } = useUserContext();
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -33,8 +33,9 @@ const Login = () => {
       )
       .then((res: AxiosResponse) => {
         if (res.data.token) {
-          const { user, token } = res.data; 
-          setUserData(user.email, user.id, token)
+          const { user, token } = res.data;
+          console.log(localStorage.getItem("user"));
+          setUserData(user.email, user.id, token);
           navigate("/");
           console.log(res.data);
           console.log("Token:", token);
@@ -111,12 +112,14 @@ const Login = () => {
                   />
                 )}
               </div>
-              <button
-                type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Submit
-              </button>
+              <div className="py-4">
+                <button
+                  type="submit"
+                  className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
             <div className={`flex items-center w-full`}>
               <h4>Need an account?</h4>
