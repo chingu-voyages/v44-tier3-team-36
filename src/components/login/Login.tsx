@@ -34,11 +34,9 @@ const Login = () => {
       .then((res: AxiosResponse) => {
         if (res.data.token) {
           const { user, token } = res.data;
-          console.log(localStorage.getItem("user"));
-          setUserData(user.email, user.id, token);
-          navigate("/");
-          console.log(res.data);
-          console.log("Token:", token);
+          console.log(res.data)
+          setUserData(user.email, user.id, token, user.subscriptions); 
+          navigate("/")
         }
       })
       .catch((err: AxiosError) => {

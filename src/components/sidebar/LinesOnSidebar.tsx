@@ -3,9 +3,10 @@ import stopsData from "../data/stations.json";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../../UserContext";
 import { lineColors } from "./LineColors";
+import "./sidebar.css";
 
 function LinesOnSidebar({ onSelectLine }) {
-  const { user, logout, token, userId } = useUserContext();
+  const { user, logout, token, userId, setUserData } = useUserContext();
   //stores current selected line
   const [selectedLine, setSelectedLine] = useState(null);
   //stores the arrival times of the selected train
@@ -23,6 +24,16 @@ function LinesOnSidebar({ onSelectLine }) {
     setSelectedLine(line);
     onSelectLine(line);
     setArrivalTimes({});
+
+    const storedSubscriptions = localStorage.getItem("subscriptions");
+    if (storedSubscriptions) {
+      const userSubscriptions = JSON.parse(storedSubscriptions);
+      if (userSubscriptions.includes(line)) {
+        setIsSubscribed(true);
+      } else {
+        setIsSubscribed(false);
+      }
+    }
   };
 
   //when return to line is pressed, resets the selectedLine, onSelectLine, and setArrivalTimes
@@ -51,26 +62,26 @@ function LinesOnSidebar({ onSelectLine }) {
       //if so it then filters arrivals and checks if the time is greater than or equal to -100 seconds.
       //When the time is negative it either means the train has arrived or left the station, I am using -100 seconds as a threshold for the
       //train arriving and anything over we can assume the trian has already left. The new times get assigned to a array called validArrivals
+      // Check if there are arrivals for this stop and direction
       if (arrivals.length > 0) {
         const validArrivals = arrivals.filter(
           (arrival: { time: number }) => arrival.time >= -100
         );
 
-        //the backend sorts the time from the farthest to the closeste. To get the earlist train arriving, this sorts it from closest to farthest.
-        //this then gets assigned to a array called earliestArrivalTime
-        if (validArrivals.length > 0) {
-          const earliestArrivalTime = Math.min(
-            ...validArrivals.map((arrival) => arrival.time)
-          );
+        // Sort the valid arrivals by the earliest time
+        validArrivals.sort((a, b) => a.time - b.time);
 
-          //if the time is negative or equal to zero the train has arrived at station
-          //if not it takes the time of the closest arrival, divides it by 60 to get the time in minutes
-          if (earliestArrivalTime <= 0) {
+        // Display the first two arrivals 
+        if (validArrivals.length > 0) {
+          const firstArrival = validArrivals[0];
+          const secondArrival = validArrivals[1];
+
+          if (firstArrival.time <= 0) {
             return "Train has arrived";
           } else {
-            const timeInSeconds = earliestArrivalTime;
-            const timeInMinutes = Math.floor(timeInSeconds / 60);
-            return `${timeInMinutes} minutes`;
+            const firstTimeInMinutes = Math.floor(firstArrival.time / 60);
+            const secondTimeInMinutes = Math.floor(secondArrival.time / 60);
+            return `${firstTimeInMinutes} minutes, ${secondTimeInMinutes} minutes`;
           }
         }
       }
@@ -119,19 +130,20 @@ function LinesOnSidebar({ onSelectLine }) {
     return () => clearInterval(timer);
   }, [selectedLine]);
 
-  // const handleSubscriptionToggle = () => {
-  //   setIsSubscribed((prevSubscribed) => !prevSubscribed);
-  // };
-
   const handleSubscriptionToggle = () => {
     if (selectedLine) {
+      const storedSubscriptions = localStorage.getItem("subscriptions");
+      const userSubscriptions = storedSubscriptions
+        ? JSON.parse(storedSubscriptions)
+        : [];
+
       const requestData = {
         userId: userId,
         routeId: selectedLine,
       };
 
       const config = {
-        method: isSubscribed ? "DELETE" : "POST",
+        method: isSubscribed ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -153,6 +165,25 @@ function LinesOnSidebar({ onSelectLine }) {
         })
         .then((data) => {
           console.log(data.message);
+          console.log(userId);
+
+          if (isSubscribed) {
+            const updatedSubscriptions = userSubscriptions.filter(
+              (sub) => sub !== selectedLine
+            );
+            localStorage.setItem(
+              "subscriptions",
+              JSON.stringify(updatedSubscriptions)
+            );
+          } else {
+            userSubscriptions.push(selectedLine);
+            localStorage.setItem(
+              "subscriptions",
+              JSON.stringify(userSubscriptions)
+            );
+          }
+
+          setIsSubscribed(!isSubscribed);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -205,25 +236,27 @@ function LinesOnSidebar({ onSelectLine }) {
             >
               Return to Lines
             </button>
-            <ul className="text-white">
-              {Object.entries(stopsData[selectedLine].stops).map(
-                ([stopId, stopData], index) => (
-                  <li
-                    key={index}
-                    className="stop-item cursor-pointer"
-                    onClick={() => toggleExpandedStop(stopId)}
-                  >
-                    {stopData.stopName}
-                    {expandedStop === stopId && (
-                      <>
-                        <p>North: {getArrivalTime(stopId, "north")}</p>
-                        <p>South: {getArrivalTime(stopId, "south")}</p>
-                      </>
-                    )}
-                  </li>
-                )
-              )}
-            </ul>
+            <div className="h-96 overflow-y-auto scrollbar-container">
+              <ul className="text-white">
+                {Object.entries(stopsData[selectedLine].stops).map(
+                  ([stopId, stopData], index) => (
+                    <li
+                      key={index}
+                      className="stop-item cursor-pointer"
+                      onClick={() => toggleExpandedStop(stopId)}
+                    >
+                      {stopData.stopName}
+                      {expandedStop === stopId && (
+                        <>
+                          <p>North: {getArrivalTime(stopId, "north")}</p>
+                          <p>South: {getArrivalTime(stopId, "south")}</p>
+                        </>
+                      )}
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       ) : (
@@ -242,7 +275,7 @@ function LinesOnSidebar({ onSelectLine }) {
                   onClick={() => handleLineClick(line)}
                   className="w-12 h-12 rounded-full text-lg font-bold text-white flex items-center justify-center mb-2 mr-2 border"
                   style={{
-                    backgroundColor: lineColors[line], 
+                    backgroundColor: lineColors[line],
                   }}
                 >
                   {line}
