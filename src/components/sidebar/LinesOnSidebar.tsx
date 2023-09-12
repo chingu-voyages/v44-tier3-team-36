@@ -64,29 +64,33 @@ function LinesOnSidebar({ onSelectLine }) {
       //train arriving and anything over we can assume the trian has already left. The new times get assigned to a array called validArrivals
       // Check if there are arrivals for this stop and direction
       if (arrivals.length > 0) {
-        const validArrivals = arrivals.filter(
-          (arrival: { time: number }) => arrival.time >= -100
-        );
+        const validArrivals = arrivals
+          .filter((arrival) => arrival.time >= 0 && arrival.time < 900)
+          .map((arrival) => ({
+            time: arrival.time,
+            formattedTime: `${Math.floor(arrival.time / 60)} minutes`,
+          }));
 
-        // Sort the valid arrivals by the earliest time
         validArrivals.sort((a, b) => a.time - b.time);
 
-        // Display the first two arrivals 
-        if (validArrivals.length > 0) {
-          const firstArrival = validArrivals[0];
-          const secondArrival = validArrivals[1];
-
-          if (firstArrival.time <= 0) {
+        if (validArrivals.length === 0) {
+          return "Train has yet to arrive";
+        } else if (validArrivals.length === 1) {
+          if (validArrivals[0].time === 0) {
             return "Train has arrived";
-          } else {
-            const firstTimeInMinutes = Math.floor(firstArrival.time / 60);
-            const secondTimeInMinutes = Math.floor(secondArrival.time / 60);
-            return `${firstTimeInMinutes} minutes, ${secondTimeInMinutes} minutes`;
           }
+          return validArrivals[0].formattedTime;
+        } else {
+          // Display first two valid arrivals as bullet points, earliest first
+          const firstTwoBulletPoints = validArrivals
+            .slice(0, 2)
+            .map((arrival) => `• ${arrival.formattedTime}`)
+            .join("\n");
+          return firstTwoBulletPoints;
         }
       }
     }
-    return "Train has yet to arrive";
+    return "No trains close at the moment";
   };
 
   //fetch to get backend for arrival time
@@ -199,14 +203,14 @@ function LinesOnSidebar({ onSelectLine }) {
             <p className="text-white">Welcome, {user}</p>
             <button
               onClick={logout}
-              className="border rounded-lg px-4 py-2 text-white bg-red-500 hover:bg-red-600 font-bold"
+              className="border w-full rounded-lg px-4 py-2 text-white bg-red-500 hover:bg-red-600 font-bold"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <button className="border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
+            <button className="w-full border rounded-lg px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 font-bold">
               <Link to="/login">Login</Link>
             </button>
             <p className="mt-2 text-white">Don't have an account?</p>
@@ -217,19 +221,26 @@ function LinesOnSidebar({ onSelectLine }) {
       {selectedLine ? (
         <div className="h-4/5 flex flex-col justify-between overflow-y-auto">
           <div className="space-y-2">
-            <h2 className="text-lg font-bold text-center text-white">
-              {selectedLine}
-            </h2>
-            {user && (
-              <button
-                onClick={handleSubscriptionToggle}
-                className={`border rounded-lg px-4 py-2 text-white ${
-                  isSubscribed ? "bg-red-500" : "bg-green-500"
-                } hover:bg-red-600 hover:bg-green-600 font-bold mx-auto`}
+            <div className="flex items-center justify-between">
+              <div
+                className="w-12 h-12 rounded-full text-lg font-bold text-white flex items-center justify-center mb-2"
+                style={{
+                  backgroundColor: lineColors[selectedLine],
+                }}
               >
-                {isSubscribed ? "Unsubscribe" : "Subscribe"}
-              </button>
-            )}
+                {selectedLine}
+              </div>
+              {user && (
+                <button
+                  onClick={handleSubscriptionToggle}
+                  className={`border rounded-lg px-4 py-2 text-white ${
+                    isSubscribed ? "bg-red-500" : "bg-green-500"
+                  } hover:bg-red-600 hover:bg-green-600 font-bold mx-auto`}
+                >
+                  {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                </button>
+              )}
+            </div>
             <button
               onClick={handleBackToLines}
               className="bg-white border rounded-lg px-4 py-2 text-black mx-auto"
@@ -242,14 +253,27 @@ function LinesOnSidebar({ onSelectLine }) {
                   ([stopId, stopData], index) => (
                     <li
                       key={index}
-                      className="stop-item cursor-pointer"
+                      className="stop-item cursor-pointer border-b pb-4 mb-4"
                       onClick={() => toggleExpandedStop(stopId)}
                     >
-                      {stopData.stopName}
+                      <div
+                        className={`mb-2 font-bold ${
+                          expandedStop === stopId ? "border-b border-white" : ""
+                        }`}
+                      >
+                        {stopData.stopName}
+                      </div>
+
                       {expandedStop === stopId && (
                         <>
-                          <p>North: {getArrivalTime(stopId, "north")}</p>
-                          <p>South: {getArrivalTime(stopId, "south")}</p>
+                          <div className="pt-2 pb-2">
+                            <p className="font-bold">North</p>
+                            <p>{getArrivalTime(stopId, "north")}</p>
+                          </div>
+                          <div className="border-dashed border-t pt-2">
+                            <p className="font-bold">South</p>
+                            <p>{getArrivalTime(stopId, "south")}</p>
+                          </div>
                         </>
                       )}
                     </li>

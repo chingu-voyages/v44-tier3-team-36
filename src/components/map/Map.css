@@ -5,14 +5,14 @@
   border-radius: 50%;
 }
 
-.custom-tooltip {
-  border-color: black;
-  border-radius: 1px;
-  box-shadow: none;
-  font-weight: bold;
-  padding: 2px;
-  white-space: nowrap;
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
+
+
 
 .leaflet-tile {
   filter: brightness(80%);
@@ -20,3 +20,14 @@
 
 
 
+
+.custom-tooltip  {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #fff;
+  font-size: 14px;
+  line-height: 24px;
+  border-radius: 0px;
+  font-weight: bold;
+}
