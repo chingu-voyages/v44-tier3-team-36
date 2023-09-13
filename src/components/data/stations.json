@@ -2601,22 +2601,6 @@
         "stopName": "Broad Channel",
         "coordinates": [40.608382, -73.815925]
       },
-      "H12": {
-        "stopName": "Beach 90 St",
-        "coordinates": [40.588034, -73.813641]
-      },
-      "H13": {
-        "stopName": "Beach 98 St",
-        "coordinates": [40.585307, -73.820558]
-      },
-      "H14": {
-        "stopName": "Beach 105 St",
-        "coordinates": [40.583209, -73.827559]
-      },
-      "H15": {
-        "stopName": "Rockaway Park-Beach 116 St",
-        "coordinates": [40.580903, -73.835592]
-      },
       "H06": {
         "stopName": "Beach 67 St",
         "coordinates": [40.590927, -73.796924]
