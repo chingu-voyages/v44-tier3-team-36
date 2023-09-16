@@ -65,7 +65,7 @@ function LinesOnSidebar({ onSelectLine }) {
       // Check if there are arrivals for this stop and direction
       if (arrivals.length > 0) {
         const validArrivals = arrivals
-          .filter((arrival) => arrival.time >= 0 && arrival.time < 900)
+          .filter((arrival) => arrival.time >= 0 && arrival.time < 1200)
           .map((arrival) => ({
             time: arrival.time,
             formattedTime: `${Math.floor(arrival.time / 60)} minutes`,
@@ -90,7 +90,7 @@ function LinesOnSidebar({ onSelectLine }) {
         }
       }
     }
-    return "No trains close at the moment";
+    return "Trains are more than 20 minutes away";
   };
 
   //fetch to get backend for arrival time
