@@ -1,8 +1,11 @@
-.arrow-icon {
+/* .arrow-icon {
   position: relative;
   width: 20px;
   height: 5px;
   transform-origin: center; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
 }
   
 .arrow-icon-north {
@@ -10,4 +13,7 @@
   width: 20px;
   height: 5px;
   transform-origin: center; 
-}
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+} */
